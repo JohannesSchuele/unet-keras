@@ -3,6 +3,14 @@ from tools.data import train_generator, test_generator, save_results, is_file, p
 from tools.generator3 import DataGenerator
 from tools.generator3 import DataGenerator
 import os
+import sys
+path = '/var/tmp/schuelej/graph_extraction/unet-keras'
+sys.path.append('/var/tmp/schuelej/graph_extraction/unet-keras')
+os.environ['PATH'] += ':'+path
+
+# path = '/local/var/tmp/schuelej/unet-keras'
+# os.environ['PATH'] += ':'+path
+
 # TODO: move to config .json files
 img_height = 576
 img_width = 729
@@ -83,9 +91,11 @@ if __name__ == "__main__":
     # saving model weights
     graph_net.save_model(model_weights_name)
 
+    print('all done!!')
+
     # generated testing set
-    test_gen = test_generator(test_path, 30, img_size)
+    #test_gen = test_generator(test_path, 30, img_size)
 
     # display results
-    results = graph_net.predict_generator(test_gen, 30, verbose=1)
-    save_results(save_path, results)
+    #results = graph_net.predict_generator(test_gen, 30, verbose=1)
+    #save_results(save_path, results)
