@@ -49,5 +49,6 @@ def merge(input1, input2):
     return x
 
 # function to create ModelCheckpoint
-def callback(name):
-    return ModelCheckpoint(name, monitor='loss',verbose=1, save_best_only=True)
+def callback(checkpoint_callback):
+    return ModelCheckpoint(checkpoint_callback , monitor='loss',verbose=1, save_freq='epoch',
+                           save_best_only=True)

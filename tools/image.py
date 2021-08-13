@@ -5,6 +5,7 @@ import numpy as np
 import pylab as plt
 
 
+
 def square_image(img, random = None):
     """ Square Image
     Function that takes an image (ndarray),
@@ -52,3 +53,35 @@ def normalize_mask(mask):
 def show_image(img):
     plt.imshow(img, cmap=plt.cm.gray)
     plt.show()
+
+
+def create_graph_tensor(mask,tensor_size):
+    """ Mask Normalization
+    Function that returns normalized mask
+    Each pixel is either 0 or 1
+    """
+
+    mask = np.asarray(mask)
+    y_positions_label = mask[:, 0:2, 0]
+    y_adjacency_label = mask[:, 2:, 0]
+
+
+    pos = y_positions_label.astype(int)
+    adj_dim = int((len(pos) * len(pos) -len(pos)) / 2)
+    tensor_graph = np.zeros((tensor_size, tensor_size, adj_dim))
+
+    for node_idx in range(len(pos)):
+        adjacency_idx_vec = np.argwhere(y_adjacency_label[node_idx, :] == 1)
+        for adjacency_idx in range(len(adjacency_idx_vec)):
+            global_adj_idx_tuple = pos[adjacency_idx, :]
+            idx_trivec = get_indices_trivec_adjacency(adj_dim,node_idx,adjacency_idx)
+            tensor_graph[node_idx[0], node_idx[1], idx_trivec] = 1
+    tensor_graph.astype(int)
+
+    return tensor_graph
+
+
+def get_indices_trivec_adjacency(adj_dim,node_idx,adjacency_idx):
+    adj_tri_vec = np.triu_indices(adj_dim, k=1)
+    idx_trivec  = np.argwhere(adj_tri_vec == [node_idx,adjacency_idx] or adj_tri_vec == [adjacency_idx,node_idx])
+    return idx_trivec[0]
